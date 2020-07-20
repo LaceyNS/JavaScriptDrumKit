@@ -58,12 +58,24 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-  window.addEventListener('keydown', function(e) {
+  function removeTransition(e) {
+    if (e.propertyName !== 'transform') return; //skip if it's ont a transform
+    e.target.classList.remove('playing'); //replace this with e.target because of definition issues
+  };
+
+  function playSound(e) {
     const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
     if (!audio) return; //stop the function from running altogether
+    key.classList.add('playing'); // This is how to add classes in vanilla js
     audio.currentTime = 0; //rewind to the start of the audio to allow it to play again on repeated keypress before the initial audio is finished playing
     audio.play();
-  });
+  };
+
+
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => addEventListener('transitionend', removeTransition));
+  window.addEventListener('keydown', playSound); 
 </script>
 
 
